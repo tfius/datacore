@@ -98,23 +98,18 @@ Datacore is an open-source AI second brain system built on GTD (Getting Things D
 ```bash
 # Clone to ~/Data
 git clone https://github.com/datacore-one/datacore.git ~/Data
+cd ~/Data
 
-# Create your configuration
-cp ~/Data/install.yaml.example ~/Data/install.yaml
-cp ~/Data/CLAUDE.template.md ~/Data/CLAUDE.md
-
-# Edit install.yaml and CLAUDE.md with your details
+# Quick setup (copy templates)
+cp CLAUDE.template.md CLAUDE.md
+cp install.yaml.example install.yaml
 ```
 
-## Optional Modules
-
-Extend functionality by installing modules:
-
-```bash
-git clone https://github.com/datacore-one/datacore-trading .datacore/modules/trading
-```
-
-Modules add specialized agents and commands for specific domains.
+**See [INSTALL.md](INSTALL.md) for complete installation guide**, including:
+- Template activation for all files
+- Adding team spaces
+- Installing modules
+- Configuring Emacs and Obsidian
 
 ## Requirements
 

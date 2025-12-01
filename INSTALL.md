@@ -1,0 +1,270 @@
+# Datacore Installation Guide
+
+This guide walks you through setting up Datacore on your system.
+
+## Prerequisites
+
+- [Claude Code](https://claude.ai/code) - AI coding assistant
+- [Git](https://git-scm.com/) - Version control
+- [Emacs](https://www.gnu.org/software/emacs/) with org-mode (for GTD)
+- [Obsidian](https://obsidian.md/) or [Logseq](https://logseq.com/) (for PKM)
+- Python 3.8+ (for utilities)
+
+## Quick Start
+
+```bash
+# Clone to ~/Data
+git clone https://github.com/datacore-one/datacore.git ~/Data
+cd ~/Data
+
+# Run installation with Claude
+# Claude will guide you through the setup process
+```
+
+## Installation Steps
+
+### Step 1: Clone Repository
+
+```bash
+git clone https://github.com/datacore-one/datacore.git ~/Data
+cd ~/Data
+```
+
+### Step 2: Activate Templates
+
+Copy template files to create your local configuration:
+
+```bash
+# Root configuration
+cp CLAUDE.template.md CLAUDE.md
+cp install.yaml.example install.yaml
+
+# Personal space configuration
+cp 0-personal/CLAUDE.template.md 0-personal/CLAUDE.md
+
+# GTD org files
+cp 0-personal/org/inbox.org.example 0-personal/org/inbox.org
+cp 0-personal/org/next_actions.org.example 0-personal/org/next_actions.org
+cp 0-personal/org/someday.org.example 0-personal/org/someday.org
+cp 0-personal/org/habits.org.example 0-personal/org/habits.org
+```
+
+### Step 3: Configure install.yaml
+
+Edit `install.yaml` with your details:
+
+```yaml
+# Your identity
+user:
+  name: Your Name
+  email: you@example.com
+
+# Spaces (personal is always 0)
+spaces:
+  - id: 0-personal
+    name: Personal
+    type: personal
+  # Add team spaces as needed
+  # - id: 1-company
+  #   name: Company Name
+  #   repo: https://github.com/org/datacore-company.git
+
+# Installed modules
+modules:
+  # - trading  # Uncomment to enable trading module
+```
+
+### Step 4: Personalize CLAUDE.md
+
+Edit `CLAUDE.md` to add your context:
+
+1. **Root CLAUDE.md**: Add any personal workflows or system modifications
+2. **0-personal/CLAUDE.md**: Define your focus areas:
+
+```markdown
+## Focus Areas (1-active/)
+
+- **work/**: Day job projects
+- **side-projects/**: Personal ventures
+- **learning/**: Skills development
+- **health/**: Health tracking
+```
+
+### Step 5: Initialize Databases
+
+```bash
+# Initialize knowledge database
+python .datacore/lib/zettel_db.py init-all
+
+# Process existing notes (if any)
+python .datacore/lib/zettel_processor.py --full-process
+```
+
+### Step 6: Verify Installation
+
+```bash
+# Check structure
+ls -la ~/Data/
+ls -la ~/Data/0-personal/org/
+ls -la ~/Data/.datacore/
+
+# Test sync
+./sync status
+```
+
+## Adding Team Spaces
+
+Team spaces are separate repositories that sync alongside your personal space.
+
+### Step 1: Create Team Space
+
+```bash
+# Clone team repo (or create new)
+git clone https://github.com/org/datacore-team.git ~/Data/1-teamname
+```
+
+### Step 2: Register in install.yaml
+
+```yaml
+spaces:
+  - id: 0-personal
+    name: Personal
+    type: personal
+  - id: 1-teamname
+    name: Team Name
+    type: team
+    repo: https://github.com/org/datacore-team.git
+```
+
+### Step 3: Configure Team CLAUDE.md
+
+Each team space has its own `CLAUDE.md` with team-specific context.
+
+## Installing Modules
+
+Modules add specialized functionality (trading, research, etc.).
+
+### Available Modules
+
+| Module | Purpose | Repo |
+|--------|---------|------|
+| trading | Trading workflows and analysis | datacore-one/datacore-trading |
+
+### Install a Module
+
+```bash
+# Clone module to modules folder
+git clone https://github.com/datacore-one/datacore-trading .datacore/modules/trading
+
+# Module commands and agents are automatically available
+```
+
+### Enable in install.yaml
+
+```yaml
+modules:
+  - trading
+```
+
+## Post-Installation
+
+### Configure Emacs
+
+Add to your Emacs config:
+
+```elisp
+;; Org-mode GTD setup
+(setq org-directory "~/Data/0-personal/org")
+(setq org-default-notes-file "~/Data/0-personal/org/inbox.org")
+
+;; Org agenda files
+(setq org-agenda-files '("~/Data/0-personal/org/"))
+```
+
+### Configure Obsidian
+
+1. Open Obsidian
+2. Open vault: `~/Data/0-personal/notes/`
+3. Enable plugins: Daily notes, Templates
+
+### Test Commands
+
+With Claude Code, try:
+
+```
+/today              # Generate daily briefing
+/gtd-daily-start    # Morning planning
+```
+
+## Upgrade Process
+
+When Datacore updates are available:
+
+```bash
+# Pull latest changes
+git pull origin main
+
+# Review template changes
+diff CLAUDE.md CLAUDE.template.md
+
+# Reinitialize databases if schema changed
+python .datacore/lib/zettel_db.py init-all
+```
+
+See `.datacore/specs/install-upgrade-process.md` for full upgrade documentation.
+
+## Troubleshooting
+
+### Database errors
+
+```bash
+# Reinitialize databases
+rm .datacore/*.db
+python .datacore/lib/zettel_db.py init-all
+```
+
+### Sync issues
+
+```bash
+# Check status of all repos
+./sync status
+
+# Force pull
+./sync
+```
+
+### Permission issues
+
+```bash
+# Ensure sync script is executable
+chmod +x sync
+```
+
+## File Structure After Installation
+
+```
+~/Data/
+├── .datacore/              # System (from repo)
+├── 0-personal/             # Your personal space
+│   ├── org/                # GTD files (from templates)
+│   │   ├── inbox.org
+│   │   ├── next_actions.org
+│   │   ├── someday.org
+│   │   └── habits.org
+│   ├── notes/              # PKM (Obsidian/Logseq)
+│   ├── code/               # Projects
+│   └── content/            # AI-generated
+├── 1-teamname/             # Team space (optional)
+├── CLAUDE.md               # Your config (from template)
+├── install.yaml            # Your manifest (from example)
+└── sync                    # Multi-repo sync
+```
+
+## Getting Help
+
+- Issues: [github.com/datacore-one/datacore/issues](https://github.com/datacore-one/datacore/issues)
+- Discussions: [github.com/datacore-one/datacore/discussions](https://github.com/datacore-one/datacore/discussions)
+
+---
+
+*For technical specifications, see `.datacore/specs/install-upgrade-process.md`*
