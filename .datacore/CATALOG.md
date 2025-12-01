@@ -117,12 +117,12 @@ Same fork-and-PR model as space templates:
 
 ## Official Spaces
 
-These are spaces managed by the Datacore organization. They demonstrate the system in action.
+Workspaces managed by Datacore organization teams.
 
-| Space | Description | Repo | Notes |
-|-------|-------------|------|-------|
-| datacore-space | Datacore development team workspace | datacore-one/datacore-space | Forked from datacore-org |
-| datafund-space | Datafund team workspace | datacore-one/datafund-space | Forked from datacore-org |
+| Space | Description | Repo | Visibility |
+|-------|-------------|------|------------|
+| datacore-space | Datacore development team | [datacore-one/datacore-space](https://github.com/datacore-one/datacore-space) | Private |
+| datafund-space | Datafund team | [datacore-one/datafund-space](https://github.com/datacore-one/datafund-space) | Private |
 
 ---
 
