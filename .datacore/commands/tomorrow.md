@@ -22,32 +22,39 @@ Execute the evening shutdown sequence with a focus on accomplishment and anticip
 
 ## Sequence
 
-### 1. Repository Sync Check
+### 1. Repository Sync Verification
 
-**For each repo, check and prompt:**
+**Verify all repos are synced (should be clean if /wrap-up was used):**
 
 ```
-REPOSITORY SYNC
----------------
-Checking all repositories...
+REPOSITORY STATUS
+─────────────────
+Verifying all repositories...
 
-datacore (root).......... [DIRTY - 5 uncommitted]
-  → Commit and push? [Y/n]
-
+datacore (root).......... [SYNCED]
 datafund-space........... [SYNCED]
-datacore-space........... [DIRTY - 1 uncommitted]
-  → Commit and push? [Y/n]
-
+datacore-space........... [SYNCED]
 datacore-dips............ [SYNCED]
 trading.................. [SYNCED]
-datacore-campaigns....... [SYNCED]
+
+All repos synced.
 ```
 
-**If user approves:**
-- Stage all changes
-- Generate appropriate commit message
-- Commit and push
-- Verify push succeeded
+**If dirty repos found (rare - means /wrap-up was skipped):**
+
+```
+⚠ Uncommitted changes found:
+
+datacore (root).......... [DIRTY - 5 uncommitted]
+datacore-space........... [DIRTY - 1 uncommitted]
+
+Running ./sync push to save work...
+[Commit and push all dirty repos]
+
+Done. All repos synced.
+```
+
+**Uses `./sync push` with retry logic if needed.**
 
 ### 2. Inbox Status
 

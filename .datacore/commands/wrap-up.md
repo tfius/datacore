@@ -166,6 +166,8 @@ Automatic patterns captured.
 
 ### 6. Push Changes to Repos
 
+**Uses `./sync push` with retry logic (up to 2 retries on failure).**
+
 ```
 SAVING WORK
 ───────────

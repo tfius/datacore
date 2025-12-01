@@ -4,10 +4,22 @@ Generate the daily briefing and append it to today's journal.
 
 ## Behavior
 
-1. **Detect context**: Check if running from a space directory or root
-2. **Generate briefing**: Create Today content with relevant sections
-3. **Append to journal**: Add under `## Daily Briefing` heading in `notes/journals/YYYY-MM-DD.md`
-4. **No user prompts**: Write directly without asking for permission
+1. **Sync repositories**: Pull latest changes from all repos
+   ```
+   SYNCING REPOS
+   ─────────────
+   Pulling latest changes...
+
+   datacore (root).......... [OK]
+   datafund-space........... [OK]
+   datacore-space........... [OK]
+
+   [If pull fails, retry twice. If still fails, warn and continue.]
+   ```
+2. **Detect context**: Check if running from a space directory or root
+3. **Generate briefing**: Create Today content with relevant sections
+4. **Append to journal**: Add under `## Daily Briefing` heading in `notes/journals/YYYY-MM-DD.md`
+5. **No user prompts**: Write directly without asking for permission
 
 ## Output Location
 
