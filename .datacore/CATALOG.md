@@ -148,8 +148,12 @@ These are spaces managed by the Datacore organization. They demonstrate the syst
    author: Your Name
    ```
 3. **Add** agents and commands
-4. **Register** in `install.yaml`
-5. **Optional**: Publish as separate repo for community
+4. **Register** using the `module-registrar` agent:
+   ```
+   :AI:module:register: Register datacore-<name> module
+   ```
+   The agent creates the repo, updates CATALOG, and submits PR.
+5. **Or manually**: Create repo, update CATALOG.md, submit PR
 
 ---
 
