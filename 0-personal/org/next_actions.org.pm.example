@@ -1,0 +1,79 @@
+#+TITLE: Next Actions
+#+FILETAGS: :next:
+
+* Onboarding
+** TODO Day 1: Learn the scaffolding structure                    :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+Read and understand Datacore's folder structure:
+- [ ] Read root ~/Data/CLAUDE.md (system overview)
+- [ ] Read 1-datafund/CLAUDE.md (space context)
+- [ ] Explore 1-datafund/ folders (1-tracks, 2-projects, 3-knowledge, 4-archive)
+- [ ] Understand numbered folder convention (0=inbox, 1=active, 2=projects, 3=knowledge, 4=archive)
+
+** TODO Day 1: Run your first /today                              :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+Start building the daily rhythm:
+- Run /today command to see morning briefing format
+- Understand what information it provides
+
+** TODO Day 2: Deep dive into Verity project                      :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+Understand the primary project:
+- [ ] Read verity/CANVAS.md - project overview and stakeholders
+- [ ] Read verity/CLAUDE.md - technical context
+- [ ] Browse verity/docs/ structure
+- [ ] Identify 3 questions/gaps - create GitHub issues for each
+
+** TODO Week 1: Review Verity planning docs                       :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+- [ ] Review docs/plans/MVP_IMPLEMENTATION_PLAN.md
+- [ ] Identify missing planning artifacts
+- [ ] Create stakeholder communication plan (if missing)
+- [ ] Update project timeline if needed
+
+** TODO Week 1: Establish daily rhythm                            :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+Build habits with the three key commands:
+- /today - morning briefing (run each morning)
+- /wrap-up - before closing terminal (run before ending work)
+- /tomorrow - end of day (run once at end of workday)
+
+** TODO Week 2: First weekly planning session                     :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+Run your first weekly review for Verity:
+- Review progress on milestones
+- Update GitHub Issues
+- Plan next week's priorities
+
+** TODO Week 2: Submit first PR to datacore                       :onboarding:
+:PROPERTIES:
+:CREATED: [2025-12-02 Mon]
+:END:
+Contribute an improvement back:
+- Document something you learned
+- Fix something that confused you
+- Improve a process description
+- Push to your fork, create PR to datacore-one/datacore
+
+* Verity
+Project management tasks for Verity will go here.
+
+* Datafund
+General Datafund tasks will go here.
+
+* AI Delegation
+Tasks tagged with :AI: are processed by autonomous agents.
+Note: As PM, you'll primarily use GitHub Issues. AI delegation is optional.
+

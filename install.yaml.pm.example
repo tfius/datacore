@@ -1,0 +1,32 @@
+meta:
+  name: "Črt's Datacore"
+  root: ~/Data
+  version: 1.0.0
+  role: pm  # project-manager
+
+user:
+  name: Črt Ahlin
+  email: crt@datafund.io
+  github: crtahlin
+
+# Root-level modules (PM doesn't need trading)
+modules: []
+
+# Personal space (tracked in root repo)
+personal:
+  path: 0-personal
+  modules: []
+
+# Team spaces
+spaces:
+  datafund:
+    repo: datacore-one/datafund-space
+    path: 1-datafund
+    modules:
+      - repo: datacore-one/datacore-campaigns
+        path: .datacore/modules/campaigns
+        permission: read
+    projects:
+      - repo: datafund/verity
+        path: 2-projects/verity
+        primary: true  # Main focus project

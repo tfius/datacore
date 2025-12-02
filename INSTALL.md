@@ -6,28 +6,57 @@ This guide walks you through setting up Datacore on your system.
 
 - [Claude Code](https://claude.ai/code) - AI coding assistant
 - [Git](https://git-scm.com/) - Version control
-- [Emacs](https://www.gnu.org/software/emacs/) with org-mode (for GTD)
-- [Obsidian](https://obsidian.md/) or [Logseq](https://logseq.com/) (for PKM)
+- [GitHub CLI](https://cli.github.com/) - For forking and PR workflow
 - Python 3.8+ (for utilities)
 
-## Quick Start
+Optional (for power users):
+- [Emacs](https://www.gnu.org/software/emacs/) with org-mode (for GTD)
+- [Obsidian](https://obsidian.md/) or [Logseq](https://logseq.com/) (for PKM)
+
+## Quick Start (Interactive)
+
+The recommended way to install Datacore is with Claude's guidance:
 
 ```bash
-# Clone to ~/Data
-git clone https://github.com/datacore-one/datacore.git ~/Data
-cd ~/Data
-
-# Run installation with Claude
-# Claude will guide you through the setup process
+mkdir ~/Data && cd ~/Data
+claude
 ```
 
-## Installation Steps
+Then tell Claude: **"install datacore from datacore-one"**
 
-### Step 1: Clone Repository
+Claude will:
+1. Fork the repo to your GitHub account
+2. Clone your fork with upstream configured
+3. Guide you through interactive setup
+4. Configure your role (PM, Developer, etc.)
+5. Set up onboarding tasks
+
+## Manual Installation
+
+If you prefer manual setup, follow the steps below.
+
+### Step 1: Fork and Clone
+
+**Important**: Fork first, then clone your fork. This enables PR contributions.
 
 ```bash
-git clone https://github.com/datacore-one/datacore.git ~/Data
+# Fork via GitHub CLI (recommended)
+gh repo fork datacore-one/datacore --clone -- ~/Data
 cd ~/Data
+
+# This automatically sets:
+# - origin = your fork (crtahlin/datacore)
+# - upstream = datacore-one/datacore
+```
+
+Or manually:
+1. Go to https://github.com/datacore-one/datacore
+2. Click "Fork" to create your copy
+3. Clone your fork:
+```bash
+git clone https://github.com/YOUR-USERNAME/datacore.git ~/Data
+cd ~/Data
+git remote add upstream https://github.com/datacore-one/datacore.git
 ```
 
 ### Step 2: Activate Templates
