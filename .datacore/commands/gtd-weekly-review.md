@@ -495,7 +495,50 @@ SYSTEM REFLECTION
 ═══════════════════════════════════════════════════
 ```
 
-### Step 13: Weekly Gratitude
+### Step 13: CLAUDE.md Health Check
+
+Run context-maintainer validation:
+
+```
+═══════════════════════════════════════════════════
+CLAUDE.MD HEALTH CHECK
+═══════════════════════════════════════════════════
+
+**Validation Results:**
+
+Line Count: [N] lines (target <300)
+- Status: [OK if ≤300 / WARN if >300]
+
+Agent Count:
+- Documented: [N]
+- Actual files in .datacore/agents/: [N]
+- Status: [OK if match / MISMATCH if different]
+
+Command Count:
+- Documented: [N]
+- Actual files in .datacore/commands/: [N]
+- Status: [OK if match / MISMATCH if different]
+
+Verification Date:
+- Last verified: [date from CLAUDE.md]
+- Days since: [N] days
+- Status: [OK if ≤7 / STALE if >7]
+
+[If any issues found:]
+"CLAUDE.md needs attention. Run context-maintainer to fix?"
+
+[If all OK:]
+"CLAUDE.md is healthy and accurate."
+
+═══════════════════════════════════════════════════
+```
+
+**Actions:**
+- If counts mismatch: Update CLAUDE.md tables
+- If line count >300: Review for content to move to docs/
+- If verification stale: Update date after confirming counts
+
+### Step 14: Weekly Gratitude
 
 Ask:
 
@@ -518,7 +561,7 @@ User answers:
 ═══════════════════════════════════════════════════
 ```
 
-### Step 14: Generate Weekly Summary
+### Step 15: Generate Weekly Summary
 
 Write comprehensive summary to `~/Data/notes/journals/[today].md`:
 
@@ -599,7 +642,7 @@ Write comprehensive summary to `~/Data/notes/journals/[today].md`:
 **Next review:** [Next Friday date] at 4:00 PM
 ```
 
-### Step 15: Close the Week
+### Step 16: Close the Week
 
 ```
 ═══════════════════════════════════════════════════

@@ -286,7 +286,41 @@ Sync Protocol.................... [READY/OFFLINE]
 Security Filters (.gitignore).... [ACTIVE/MISSING]
 ```
 
-### 9. Final Assessment
+### 9. Context Integrity (CLAUDE.md Health)
+
+**Run context-maintainer validation on root CLAUDE.md:**
+
+```
+CONTEXT INTEGRITY
+-----------------
+CLAUDE.md Analysis:
+  Line Count............. [N] lines
+    - Status: [NOMINAL (<300) / ELEVATED (300-350) / CRITICAL (>350)]
+
+  Agent Registry:
+    - Documented: [N] agents
+    - Actual files: [N] agents
+    - Status: [SYNCHRONIZED / DRIFT DETECTED]
+
+  Command Registry:
+    - Documented: [N] commands
+    - Actual files: [N] commands
+    - Status: [SYNCHRONIZED / DRIFT DETECTED]
+
+  Verification Date:
+    - Last verified: [date]
+    - Age: [N] days
+    - Status: [CURRENT (≤7 days) / STALE (>7 days)]
+
+Context Integrity: [OPTIMAL / MAINTENANCE REQUIRED / CRITICAL]
+```
+
+**If issues detected:**
+- Drift: "Context registry out of sync. Run context-maintainer to reconcile."
+- Line count elevated: "Context file exceeds optimal size. Review for consolidation."
+- Stale verification: "Verification date expired. Confirm counts and update."
+
+### 10. Final Assessment
 
 **Summarize overall status:**
 
@@ -300,6 +334,7 @@ Overall Status: [ALL SYSTEMS OPERATIONAL / MINOR ANOMALIES DETECTED / CRITICAL F
 Repository Status: [X/Y repos synced]
 Space Status: [X/Y spaces operational]
 DIP Compliance: [DIP-0002: X%, DIP-0003: X%]
+Context Integrity: [OPTIMAL / MAINTENANCE REQUIRED / CRITICAL]
 
 [If issues found:]
 Recommended Actions:
@@ -331,6 +366,14 @@ Uncommitted Changes:
 | DEGRADED | Partially functional, some issues |
 | OFFLINE | Not available |
 | MISSING | Required component not found |
+| NOMINAL | Within acceptable parameters |
+| ELEVATED | Above optimal, attention recommended |
+| SYNCHRONIZED | Registry matches actual files |
+| DRIFT DETECTED | Registry differs from actual files |
+| CURRENT | Recently verified (≤7 days) |
+| STALE | Verification expired (>7 days) |
+| OPTIMAL | All context checks passing |
+| MAINTENANCE REQUIRED | Context needs attention |
 
 ## Usage
 
@@ -347,13 +390,23 @@ Display the full diagnostic report in the terminal. Use monospace formatting for
 
 If critical issues are found, provide specific remediation steps.
 
+## Diagnostic Levels (TNG Reference)
+
+| Level | Scope | Duration | Use Case |
+|-------|-------|----------|----------|
+| Level 1 | Full systems, all subsystems | 10+ min | Post-install, major issues |
+| Level 3 | Primary systems only | 3-5 min | Routine check |
+| Level 5 | Quick status only | <1 min | Fast verification |
+
+This command runs a **Level 1 diagnostic** by default.
+
 ## Related Tools
 
 | Tool | Purpose |
 |------|---------|
-| `context-maintainer` agent | Deep DIP-0002 validation (content, privacy, staleness) |
+| `context-maintainer` agent | Deep DIP-0002 validation, CLAUDE.md health, auto-fix |
 | `scaffolding-auditor` agent | Detailed DIP-0003 scaffolding gap analysis |
-| `/gtd-weekly-review` | Runs context health check as part of review |
+| `/gtd-weekly-review` | Runs context health check as part of weekly review (Step 13) |
 
 ---
 

@@ -107,7 +107,39 @@ Apply CLAUDE.md optimization patterns (see [[CLAUDE-md-Optimization-Patterns]]):
 - Implicit assumptions (make explicit)
 - Missing boundaries (suggest CAN/CANNOT/MUST)
 
-### 5. Staleness Detection
+### 5. CLAUDE.md Health Validation
+
+Check CLAUDE.md against best practices (see learning/patterns.md):
+
+**Health Checks:**
+
+| Check | Threshold | Action |
+|-------|-----------|--------|
+| Line count | >300 lines | Warn: "CLAUDE.md is {N} lines (target <300)" |
+| Agent count match | Differs from `.datacore/agents/` | Report discrepancy, offer fix |
+| Command count match | Differs from `.datacore/commands/` | Report discrepancy, offer fix |
+| Verification date | >7 days old | Warn: "Counts last verified {date}" |
+| Missing verification date | No date in structure | Add current date |
+
+**Verification Date Format:**
+
+Look for pattern in structure section:
+```
+│   ├── agents/             # Core agents (17, verified 2025-12-02)
+│   ├── commands/           # Core commands (20, verified 2025-12-02)
+```
+
+**Health Report Section:**
+
+```markdown
+### CLAUDE.md Health
+- [OK] Line count: 321 (target <300)
+- [OK] Agents: 17 documented, 17 files
+- [OK] Commands: 20 documented, 20 files
+- [OK] Verified: 2025-12-02 (today)
+```
+
+### 6. Staleness Detection
 
 Flag context that may be outdated:
 
@@ -115,8 +147,9 @@ Flag context that may be outdated:
 - Dates more than 6 months old
 - Links that return 404
 - Sections marked TODO/FIXME
+- Verification dates older than 7 days
 
-### 6. Contribution Suggestions
+### 7. Contribution Suggestions
 
 When user improves context, suggest:
 
