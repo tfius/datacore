@@ -346,7 +346,7 @@ Uncommitted Changes:
 - [repo]: [count] files need commit
 
 [If all clear:]
-"All stations report ready, Captain. The ship is yours."
+"All stations report ready. Systems nominal."
 ```
 
 ## Status Definitions
