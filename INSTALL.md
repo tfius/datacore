@@ -26,37 +26,38 @@ Then tell Claude: **"install datacore from datacore-one"**
 
 Claude will:
 1. Fork the repo to your GitHub account
-2. Clone your fork with upstream configured
-3. Guide you through interactive setup
-4. Configure your role (PM, Developer, etc.)
-5. Set up onboarding tasks
+2. Clone your fork into ~/Data (current directory)
+3. Configure upstream remote
+4. Guide you through interactive setup
+5. Set up onboarding tasks based on your role
 
 ## Manual Installation
 
 If you prefer manual setup, follow the steps below.
 
-### Step 1: Fork and Clone
+### Step 1: Fork and Clone into ~/Data
 
-**Important**: Fork first, then clone your fork. This enables PR contributions.
+**Important**: Fork first, then clone into ~/Data directory (not a subdirectory).
 
 ```bash
-# Fork via GitHub CLI (recommended)
-gh repo fork datacore-one/datacore --clone -- ~/Data
-cd ~/Data
+# Create and enter Data directory
+mkdir ~/Data && cd ~/Data
 
-# This automatically sets:
-# - origin = your fork (crtahlin/datacore)
-# - upstream = datacore-one/datacore
+# Fork without cloning
+gh repo fork datacore-one/datacore --clone=false
+
+# Clone YOUR fork into current directory (note the "." at the end)
+git clone https://github.com/YOUR-USERNAME/datacore.git .
+
+# Add upstream for syncing
+git remote add upstream https://github.com/datacore-one/datacore.git
 ```
 
-Or manually:
-1. Go to https://github.com/datacore-one/datacore
-2. Click "Fork" to create your copy
-3. Clone your fork:
+Verify remotes:
 ```bash
-git clone https://github.com/YOUR-USERNAME/datacore.git ~/Data
-cd ~/Data
-git remote add upstream https://github.com/datacore-one/datacore.git
+git remote -v
+# origin    https://github.com/YOUR-USERNAME/datacore.git (fetch)
+# upstream  https://github.com/datacore-one/datacore.git (fetch)
 ```
 
 ### Step 2: Activate Templates
