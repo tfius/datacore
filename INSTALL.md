@@ -189,6 +189,28 @@ ls -la ~/Data/.datacore/
 
 ## Adding Team Spaces
 
+### Joining an Existing Team Space
+
+If you've been granted access to a team space (e.g., datafund-space), simply clone it:
+
+```bash
+cd ~/Data
+git clone https://github.com/datacore-one/datafund-space.git 1-datafund
+```
+
+Then register it in your `install.yaml`:
+
+```yaml
+spaces:
+  datafund:
+    repo: datacore-one/datafund-space
+    path: 1-datafund
+```
+
+That's it. The space is now available at `~/Data/1-datafund/`.
+
+### Creating a New Team Space
+
 Team spaces use the **fork-and-overlay** model for maximum contribution potential.
 
 ### How It Works
