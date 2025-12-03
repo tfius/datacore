@@ -22,12 +22,12 @@ mkdir ~/Data && cd ~/Data
 claude
 ```
 
-Then tell Claude: **"install datacore from datacore-one"**
+Then tell Claude: **"fork and clone datacore-one/datacore into this directory"**
 
 Claude will:
-1. Fork the repo to your GitHub account
-2. Clone your fork into ~/Data (current directory)
-3. Configure upstream remote
+1. Run `gh repo fork datacore-one/datacore --clone=false`
+2. Clone your fork with `git clone https://github.com/YOUR-USERNAME/datacore.git .`
+3. Add upstream: `git remote add upstream https://github.com/datacore-one/datacore.git`
 4. Guide you through interactive setup
 5. Set up onboarding tasks based on your role
 
