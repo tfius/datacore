@@ -45,18 +45,34 @@ Review the session to identify:
 
 ### Phase 2: Knowledge Classification
 
+**IMPORTANT: Space-Aware Routing**
+
+Before classifying, determine which space the session primarily worked in:
+
+1. **Personal space** (0-personal/) → Use root `.datacore/learning/` and `0-personal/notes/2-knowledge/`
+2. **Team/project space** (e.g., 2-datacore/, 1-datafund/) → Use space's `.datacore/learning/` and `3-knowledge/`
+3. **Cross-cutting** → Use root `.datacore/learning/` for patterns, appropriate space for zettels
+
+**Routing Rules:**
+- If session was about Datacore development (DIPs, agents, specs) → `2-datacore/`
+- If session was about Datafund business → `1-datafund/`
+- If session was personal productivity → `0-personal/`
+- General system patterns that apply everywhere → root `.datacore/`
+
 Classify extracted learnings into categories:
 
 | Category | Output Location | Purpose |
 |----------|-----------------|---------|
-| **Patterns** | `.datacore/learning/patterns.md` | Successful approaches to remember |
-| **Corrections** | `.datacore/learning/corrections.md` | Mistakes to avoid |
-| **Preferences** | `.datacore/learning/preferences.md` | User/org style preferences |
-| **Insights** | `3-knowledge/insights.md` | Strategic observations |
-| **Zettels** | `3-knowledge/zettel/` | Atomic concepts worth preserving |
+| **Patterns** | `[space]/.datacore/learning/patterns.md` | Successful approaches to remember |
+| **Corrections** | `[space]/.datacore/learning/corrections.md` | Mistakes to avoid |
+| **Preferences** | `[space]/.datacore/learning/preferences.md` | User/org style preferences |
+| **Insights** | `[space]/3-knowledge/insights.md` | Strategic observations |
+| **Zettels** | `[space]/3-knowledge/zettel/` | Atomic concepts worth preserving |
 | **Agent Improvements** | `.datacore/agents/*.md` | Agent capability enhancements |
 | **Command Updates** | `.datacore/commands/*.md` | Workflow improvements |
 | **DIP Proposals** | `.datacore/dips/` | System-level improvements |
+
+Where `[space]` is determined by session context (e.g., `2-datacore`, `1-datafund`, or root `~/Data`).
 
 ### Phase 3: Integration
 
@@ -258,18 +274,22 @@ User can skip with "none" or provide input.
 - Today's journal entry
 - Task completion records
 - Any artifacts created during session
-- Previous patterns.md (to avoid duplicates)
+- Previous patterns.md in target space (to avoid duplicates)
 
-**Update:**
-- `.datacore/learning/patterns.md`
-- `.datacore/learning/corrections.md`
-- `.datacore/learning/preferences.md`
-- `3-knowledge/insights.md`
+**Update (in appropriate space):**
+- `[space]/.datacore/learning/patterns.md`
+- `[space]/.datacore/learning/corrections.md`
+- `[space]/.datacore/learning/preferences.md`
+- `[space]/3-knowledge/insights.md`
 - Relevant agent files (if improvements found)
 
 **Create:**
-- New zettels in `3-knowledge/zettel/`
-- DIP drafts in `0-inbox/` (if system-level)
+- New zettels in `[space]/3-knowledge/zettel/`
+- DIP drafts in `.datacore/dips/` (if system-level)
+
+**Post-Creation:**
+- Open all created/modified files with `open [filepath]` command
+- This allows user to immediately review learnings
 
 ## Your Boundaries
 
@@ -293,6 +313,7 @@ User can skip with "none" or provide input.
 - Use consistent formatting
 - Link new zettels to related concepts
 - Summarize learnings added
+- **Open created/modified markdown files** using system open command after writing them (so user can review)
 
 ## Key Principles
 

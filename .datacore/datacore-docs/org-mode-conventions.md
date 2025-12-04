@@ -331,5 +331,5 @@ When editing org files programmatically:
 ## References
 
 - [Org Mode Manual](https://orgmode.org/manual/)
-- [GTD Spec](../gtd-spec.md)
+- [DIP-0009: GTD System Specification](../dips/DIP-0009-gtd-specification.md)
 - [DIP-0002: Layered Context Pattern](../dips/DIP-0002-layered-context-pattern.md)

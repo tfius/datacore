@@ -1,5 +1,9 @@
 # GTD System Specification
 
+> **DEPRECATION NOTICE**: This document is superseded by [DIP-0009: GTD System Specification](dips/DIP-0009-gtd-specification.md).
+> DIP-0009 is the comprehensive GTD specification including workflow, states, agents, modules, and integration patterns.
+> This file is retained for reference until DIP-0009 is finalized.
+
 This document defines the structure and routing rules for the GTD system. All GTD agents must follow this specification.
 
 ## File Locations
