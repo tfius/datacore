@@ -187,24 +187,32 @@ python ~/.datacore/lib/journal_parser.py --sync --space personal
 
 ### 7. Push Changes to Repos
 
-**Uses `./sync push` with retry logic (up to 2 retries on failure).**
+**Push ALL repos including subprojects within spaces.**
 
 ```
 SAVING WORK
 ───────────
 Checking for uncommitted changes...
 
-datacore (root).......... [3 files changed]
-  → Committing: "Session: [goal summary]"
-  → Pushing... Done
+1. Spaces & Root (via ./sync push):
+   datacore (root).......... [3 files changed] → Pushed
+   datafund-space........... [No changes]
+   datacore-space........... [1 file changed] → Pushed
 
-datafund-space........... [No changes]
-datacore-space........... [1 file changed]
-  → Committing: "Session: [goal summary]"
-  → Pushing... Done
+2. Subproject repos (manual check):
+   [Check git status in common subproject locations]
+   1-datafund/2-projects/verity... [1 commit ahead] → Pushing...
+   [Any other repos with unpushed commits]
 
 All work saved.
 ```
+
+**Steps:**
+1. Run `./sync push` for spaces and root
+2. Check subproject repos for unpushed commits:
+   - `git -C 1-datafund/2-projects/verity status`
+   - Any other active project repos
+3. Push any repos that are ahead of origin
 
 **Commit message format:**
 ```
@@ -214,6 +222,8 @@ Session: [brief goal/topic]
 - [Key change 2]
 
 🤖 Generated with Claude Code
+
+Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 **If push fails:**
@@ -247,18 +257,54 @@ Will be reviewed in /tomorrow for overnight execution.
 No new AI tasks.
 ```
 
-### 10. Close
+### 10. Completion Checklist (REQUIRED)
+
+**Before closing, verify all steps are done:**
+
+```
+WRAP-UP CHECKLIST
+─────────────────
+[ ] 1. Session summary displayed
+[ ] 2. Continuation tasks created (if work incomplete)
+[ ] 3. Completed tasks marked DONE in next_actions.org
+[ ] 4. Session learnings captured (patterns.md)
+[ ] 5. Personal journal updated (0-personal/notes/journals/)
+[ ] 6. Space journal updated (if working in a space)
+[ ] 7. All repos pushed:
+      [ ] Root & spaces (./sync push)
+      [ ] Subproject repos (verity, etc.)
+[ ] 8. Context sync completed
+[ ] 9. AI delegation captured (if any)
+
+Missing items? Complete them before closing.
+```
+
+**Verification commands:**
+```bash
+# Check all repos are pushed
+git -C ~/Data status --short
+git -C ~/Data/1-datafund/2-projects/verity log --oneline origin/main..HEAD
+
+# Check journals exist
+ls -la ~/Data/0-personal/notes/journals/$(date +%Y-%m-%d).md
+ls -la ~/Data/1-datafund/journal/$(date +%Y-%m-%d).md 2>/dev/null
+```
+
+### 11. Close
 
 ```
 ═══════════════════════════════════════════════════
 SESSION COMPLETE
 ═══════════════════════════════════════════════════
 
+Checklist: [X/9 items verified]
+
 Summary:
 - Tasks completed: X
 - Continuation tasks: X (with bootstrap context)
 - Learnings captured: X patterns
-- Journal updated: Yes
+- Journals updated: personal + [space if applicable]
+- All repos pushed: Yes
 
 [If continuation task created:]
 Next session can run: /continue
@@ -321,10 +367,11 @@ Run `/tomorrow` once at end of day.
 | Continuation tasks | Semi-auto (user confirms/adds context) |
 | Task completion | Semi-auto (user confirms) |
 | Learning extraction | Mostly auto (optional user input) |
-| Journal entry | Automatic |
-| Push to repos | Automatic (commit + push all changes) |
+| Journal entry | Automatic (personal + space journals) |
+| Push to repos | Automatic (spaces via sync + subproject repos) |
 | Context sync | Automatic (silent) |
 | AI delegation | Optional (user-initiated) |
+| Completion checklist | Required (verify all steps done) |
 
 ## Related
 
