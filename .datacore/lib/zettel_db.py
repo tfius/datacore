@@ -11,18 +11,21 @@ Unified database for ALL Datacore content:
 Core Principle: Markdown/org files are source of truth. DB is derived index.
 
 Database hierarchy:
-- Root DB: ~/Data/.datacore/knowledge.db (all spaces, cross-space queries)
-- Space DBs: ~/Data/{space}/.datacore/knowledge.db (space-specific)
+- Root DB: {DATA_ROOT}/.datacore/knowledge.db (all spaces, cross-space queries)
+- Space DBs: {DATA_ROOT}/{space}/.datacore/knowledge.db (space-specific)
 
 Usage:
-    python zettel_db.py init [--space SPACE]
-    python zettel_db.py rebuild [--space SPACE]
-    python zettel_db.py sync [--space SPACE] [--full]
-    python zettel_db.py stats [--space SPACE] [--json]
-    python zettel_db.py search <query> [--space SPACE] [--type TYPE]
-    python zettel_db.py unresolved [--space SPACE]
-    python zettel_db.py orphans [--space SPACE]
-    python zettel_db.py validate [--fix]
+    python zettel_db.py init [--space SPACE] [--root PATH]
+    python zettel_db.py rebuild [--space SPACE] [--root PATH]
+    python zettel_db.py sync [--space SPACE] [--full] [--root PATH]
+    python zettel_db.py stats [--space SPACE] [--json] [--root PATH]
+    python zettel_db.py search <query> [--space SPACE] [--type TYPE] [--root PATH]
+    python zettel_db.py unresolved [--space SPACE] [--root PATH]
+    python zettel_db.py orphans [--space SPACE] [--root PATH]
+    python zettel_db.py validate [--fix] [--root PATH]
+
+Environment Variables:
+    DATACORE_ROOT - Override default root path (~/Data)
 """
 
 import sqlite3
@@ -32,64 +35,104 @@ import hashlib
 from pathlib import Path
 from datetime import datetime, date
 
-# Base paths
-DATA_ROOT = Path.home() / "Data"
+
+def _get_data_root() -> Path:
+    """Get the datacore root directory.
+
+    Priority:
+    1. DATACORE_ROOT environment variable
+    2. Current working directory (if it has .datacore/)
+    3. Default ~/Data
+    """
+    # Check environment variable
+    if 'DATACORE_ROOT' in os.environ:
+        return Path(os.environ['DATACORE_ROOT'])
+
+    # Check current working directory
+    cwd = Path.cwd()
+    if (cwd / '.datacore').is_dir():
+        return cwd
+
+    # Default
+    return Path.home() / "Data"
+
+
+def _build_spaces(root: Path) -> dict:
+    """Build SPACES configuration based on root path."""
+    return {
+        'personal': {
+            'path': root / '0-personal',
+            'scan_paths': [
+                # Knowledge
+                root / '0-personal' / 'notes' / '2-knowledge' / 'zettel',
+                root / '0-personal' / 'notes' / 'pages',
+                root / '0-personal' / 'notes' / 'Clippings',
+                root / '0-personal' / 'notes' / '0-inbox',
+                root / '0-personal' / 'notes' / '1-active',
+                # Journals
+                root / '0-personal' / 'notes' / 'journals',
+            ],
+            'org_paths': [
+                root / '0-personal' / 'org',
+            ],
+            'journal_path': root / '0-personal' / 'notes' / 'journals',
+        },
+        'datafund': {
+            'path': root / '1-datafund',
+            'scan_paths': [
+                root / '1-datafund' / '3-knowledge' / 'zettel',
+                root / '1-datafund' / '3-knowledge' / 'pages',
+                root / '1-datafund' / '3-knowledge' / 'literature',
+                root / '1-datafund' / '1-tracks' / 'research',
+            ],
+            'org_paths': [
+                root / '1-datafund' / 'org',
+            ],
+            'journal_path': root / '1-datafund' / 'journal',
+        },
+        'datacore': {
+            'path': root / '2-datacore',
+            'scan_paths': [
+                root / '2-datacore' / '3-knowledge' / 'zettel',
+                root / '2-datacore' / '3-knowledge' / 'pages',
+            ],
+            'org_paths': [
+                root / '2-datacore' / 'org',
+            ],
+            'journal_path': root / '2-datacore' / 'journal',
+        },
+    }
+
+
+def _build_system_paths(root: Path) -> dict:
+    """Build SYSTEM_PATHS configuration based on root path."""
+    return {
+        'agents': root / '.datacore' / 'agents',
+        'commands': root / '.datacore' / 'commands',
+        'specs': root / '.datacore' / 'specs',
+        'dips': root / '.datacore' / 'dips',
+        'learning': root / '.datacore' / 'learning',
+        'modules': root / '.datacore' / 'modules',
+    }
+
+
+def set_data_root(root: Path) -> None:
+    """Set the data root and rebuild all path configurations.
+
+    Call this to change the root directory at runtime.
+    """
+    global DATA_ROOT, ROOT_DB_PATH, SPACES, SYSTEM_PATHS
+    DATA_ROOT = root
+    ROOT_DB_PATH = DATA_ROOT / ".datacore" / "knowledge.db"
+    SPACES = _build_spaces(DATA_ROOT)
+    SYSTEM_PATHS = _build_system_paths(DATA_ROOT)
+
+
+# Initialize with default root
+DATA_ROOT = _get_data_root()
 ROOT_DB_PATH = DATA_ROOT / ".datacore" / "knowledge.db"
-
-# Space configurations - ALL content locations
-SPACES = {
-    'personal': {
-        'path': DATA_ROOT / '0-personal',
-        'scan_paths': [
-            # Knowledge
-            DATA_ROOT / '0-personal' / 'notes' / '2-knowledge' / 'zettel',
-            DATA_ROOT / '0-personal' / 'notes' / 'pages',
-            DATA_ROOT / '0-personal' / 'notes' / 'Clippings',
-            DATA_ROOT / '0-personal' / 'notes' / '0-inbox',
-            DATA_ROOT / '0-personal' / 'notes' / '1-active',
-            # Journals
-            DATA_ROOT / '0-personal' / 'notes' / 'journals',
-        ],
-        'org_paths': [
-            DATA_ROOT / '0-personal' / 'org',
-        ],
-        'journal_path': DATA_ROOT / '0-personal' / 'notes' / 'journals',
-    },
-    'datafund': {
-        'path': DATA_ROOT / '1-datafund',
-        'scan_paths': [
-            DATA_ROOT / '1-datafund' / '3-knowledge' / 'zettel',
-            DATA_ROOT / '1-datafund' / '3-knowledge' / 'pages',
-            DATA_ROOT / '1-datafund' / '3-knowledge' / 'literature',
-            DATA_ROOT / '1-datafund' / '1-tracks' / 'research',
-        ],
-        'org_paths': [
-            DATA_ROOT / '1-datafund' / 'org',
-        ],
-        'journal_path': DATA_ROOT / '1-datafund' / 'journal',
-    },
-    'datacore': {
-        'path': DATA_ROOT / '2-datacore',
-        'scan_paths': [
-            DATA_ROOT / '2-datacore' / '3-knowledge' / 'zettel',
-            DATA_ROOT / '2-datacore' / '3-knowledge' / 'pages',
-        ],
-        'org_paths': [
-            DATA_ROOT / '2-datacore' / 'org',
-        ],
-        'journal_path': DATA_ROOT / '2-datacore' / 'journal',
-    },
-}
-
-# System paths (core datacore)
-SYSTEM_PATHS = {
-    'agents': DATA_ROOT / '.datacore' / 'agents',
-    'commands': DATA_ROOT / '.datacore' / 'commands',
-    'specs': DATA_ROOT / '.datacore' / 'specs',
-    'dips': DATA_ROOT / '.datacore' / 'dips',
-    'learning': DATA_ROOT / '.datacore' / 'learning',
-    'modules': DATA_ROOT / '.datacore' / 'modules',
-}
+SPACES = _build_spaces(DATA_ROOT)
+SYSTEM_PATHS = _build_system_paths(DATA_ROOT)
 
 # File type detection based on path and filename
 def detect_file_type(path):
@@ -1035,10 +1078,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Knowledge Database Manager")
     parser.add_argument('command', choices=['init', 'init-all', 'stats', 'search', 'unresolved', 'orphans', 'sync', 'sync-all'])
     parser.add_argument('query', nargs='?', help='Search query (for search command)')
-    parser.add_argument('--space', '-s', choices=list(SPACES.keys()), help='Space to operate on (omit for root)')
+    parser.add_argument('--space', '-s', choices=['personal', 'datafund', 'datacore'], help='Space to operate on (omit for root)')
     parser.add_argument('--type', '-t', help='Filter by file type (zettel, page, journal, etc.)')
+    parser.add_argument('--root', '-r', help='Datacore root directory (default: ~/Data or DATACORE_ROOT env var)')
 
     args = parser.parse_args()
+
+    # Set custom root if provided
+    if args.root:
+        set_data_root(Path(args.root).expanduser().resolve())
 
     if args.command == "init":
         init_database(args.space)
