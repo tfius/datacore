@@ -5,11 +5,47 @@ Launch the knowledge graph visualization or run graph analysis commands.
 ## Usage
 
 ```
-/datacortex              # Start server and open visualization
-/datacortex stats        # Show graph statistics
-/datacortex pulse        # Generate a new pulse snapshot
-/datacortex orphans      # Find unlinked documents
+/datacortex                      # Start server and open visualization
+/datacortex stats                # Show graph statistics
+/datacortex embed [--force]      # Compute/update embeddings
+/datacortex opportunities        # Find low-hanging fruit for research
+/datacortex search "query"       # Q&A search
+/datacortex insights [--cluster N]  # Cluster analysis
+/datacortex digest               # Link suggestions
+/datacortex gaps                 # Knowledge gap detection
+/datacortex orphans              # Find unlinked documents
+/datacortex pulse                # Generate pulse snapshot
+/datacortex spaces               # List available spaces
 ```
+
+## All Commands
+
+### Graph & Visualization
+
+| Command | Description |
+|---------|-------------|
+| `/datacortex` | Start server at localhost:8765 and open browser |
+| `/datacortex stats` | Show node/edge counts, types, spaces |
+| `/datacortex orphans [--min-words N]` | Find documents with no connections |
+| `/datacortex spaces` | List spaces with knowledge databases |
+
+### AI Extensions
+
+| Command | Description |
+|---------|-------------|
+| `/datacortex embed [--force]` | Compute embeddings (incremental or forced) |
+| `/datacortex search "query" [--top N]` | RAG search with full content |
+| `/datacortex opportunities [--top N]` | Find stubs, orphans, gaps to fill |
+| `/datacortex insights [--cluster N]` | Analyze clusters, find hubs and themes |
+| `/datacortex digest [--threshold N]` | Find similar unlinked documents |
+| `/datacortex gaps [--min-score N]` | Detect gaps between clusters |
+
+### Temporal Snapshots
+
+| Command | Description |
+|---------|-------------|
+| `/datacortex pulse` | Generate a new pulse snapshot |
+| `/datacortex pulse list` | List available pulses |
 
 ## Behavior
 
@@ -21,11 +57,11 @@ Launch the knowledge graph visualization or run graph analysis commands.
 
 ```bash
 cd ~/Data/1-datafund/2-projects/datacortex
+source .venv/bin/activate
 
-# Check if server running
 if ! curl -s http://localhost:8765/api/health > /dev/null 2>&1; then
     echo "Starting datacortex server..."
-    python -m datacortex serve &
+    DATACORE_ROOT=~/Data datacortex serve &
     sleep 2
 fi
 
@@ -34,80 +70,119 @@ open http://localhost:8765
 
 ### /datacortex stats
 
-Show graph statistics without starting the server:
+Show graph statistics:
 
 ```bash
-cd ~/Data/1-datafund/2-projects/datacortex
-python -m datacortex stats
+DATACORE_ROOT=~/Data datacortex stats
 ```
 
-Output:
-```
-==================================================
-  DATACORTEX GRAPH STATISTICS
-==================================================
-  Spaces: personal, datafund
-  Generated: 2025-01-15 14:30
-==================================================
+### /datacortex embed
 
-  Nodes: 1,234
-  Edges: 3,456
-    - Resolved: 3,200
-    - Unresolved: 256
-  Avg Degree: 5.6
-  Max Degree: 42
-  Orphans: 89
-
-  By Type:
-    page: 456
-    zettel: 389
-    journal: 234
-    literature: 89
-    stub: 66
-
-  By Space:
-    datafund: 789
-    personal: 445
-```
-
-### /datacortex pulse
-
-Generate a new pulse snapshot:
+Compute semantic embeddings for all documents:
 
 ```bash
-cd ~/Data/1-datafund/2-projects/datacortex
-python -m datacortex pulse generate
+DATACORE_ROOT=~/Data datacortex embed           # Incremental (cache)
+DATACORE_ROOT=~/Data datacortex embed --force   # Recompute all
+DATACORE_ROOT=~/Data datacortex embed --space datafund  # Single space
 ```
 
-Output:
+### /datacortex opportunities
+
+Find low-hanging fruit for research:
+
+```bash
+DATACORE_ROOT=~/Data datacortex opportunities --top 15
 ```
-Generating pulse for spaces: personal, datafund
-Pulse saved: pulses/2025-01-15-1430.json
-  ID: 2025-01-15-1430
-  Nodes: 1,234
-  Edges: 3,456
+
+Output categories:
+- **HIGH_VALUE_STUBS**: Concepts referenced but undefined
+- **INTEGRATION_CANDIDATES**: Orphan docs worth connecting
+- **UNDERLINKED_CONTENT**: Substantial docs with few links
+- **STUB_HEAVY_CLUSTERS**: Topic areas needing research
+
+### /datacortex search
+
+RAG search with full content for Q&A:
+
+```bash
+DATACORE_ROOT=~/Data datacortex search "data tokenization" --top 10
+DATACORE_ROOT=~/Data datacortex search "DMCC pilot" --no-expand
+```
+
+### /datacortex insights
+
+Analyze knowledge clusters:
+
+```bash
+DATACORE_ROOT=~/Data datacortex insights              # All clusters
+DATACORE_ROOT=~/Data datacortex insights --cluster 3  # Single cluster
+DATACORE_ROOT=~/Data datacortex insights --top 5      # Top 5 by size
+```
+
+### /datacortex digest
+
+Find similar documents that should be linked:
+
+```bash
+DATACORE_ROOT=~/Data datacortex digest --threshold 0.8 --top-n 20
+```
+
+### /datacortex gaps
+
+Detect knowledge gaps between clusters:
+
+```bash
+DATACORE_ROOT=~/Data datacortex gaps --min-score 0.3
 ```
 
 ### /datacortex orphans
 
-Find documents with no connections:
+Find unconnected documents:
 
 ```bash
-cd ~/Data/1-datafund/2-projects/datacortex
-python -m datacortex orphans --min-words 100
+DATACORE_ROOT=~/Data datacortex orphans --min-words 100
+```
+
+### /datacortex pulse
+
+Generate temporal snapshots:
+
+```bash
+DATACORE_ROOT=~/Data datacortex pulse generate
+DATACORE_ROOT=~/Data datacortex pulse list
 ```
 
 ## Prerequisites
 
 1. **Install datacortex**:
    ```bash
-   pip install -e ~/Data/1-datafund/2-projects/datacortex
+   cd ~/Data/1-datafund/2-projects/datacortex
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -e .
    ```
 
-2. **Sync database** (if stale):
+2. **Compute embeddings** (first time):
+   ```bash
+   DATACORE_ROOT=~/Data datacortex embed
+   ```
+
+3. **Sync database** (if stale):
    ```bash
    python ~/.datacore/lib/zettel_db.py sync
    ```
+
+## Related Commands
+
+For AI-synthesized insights, use the specialized commands:
+
+| Command | Model | Purpose |
+|---------|-------|---------|
+| `/datacortex-digest` | haiku | Link suggestions with reasoning |
+| `/datacortex-gaps` | haiku | Bridge suggestions between clusters |
+| `/datacortex-insights` | sonnet | Deep cluster analysis |
+| `/datacortex-ask [question]` | haiku | Answer questions from KB |
+| `/datacortex-opportunities` | haiku | Research opportunities with follow-up |
 
 ## Web Interface Features
 
@@ -129,3 +204,4 @@ python -m datacortex orphans --min-words 100
 
 - Server runs at http://localhost:8765
 - Pulses saved to `~/Data/1-datafund/2-projects/datacortex/pulses/`
+- Search/insights/opportunities write to `/tmp/datacortex_*.txt`
