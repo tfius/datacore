@@ -5,7 +5,8 @@ Launch the knowledge graph visualization or run graph analysis commands.
 ## Usage
 
 ```
-/datacortex                      # Start server and open visualization
+/datacortex                      # Start server and open graph visualization
+/datacortex workspace            # Start server and open workspace UI
 /datacortex stats                # Show graph statistics
 /datacortex embed [--force]      # Compute/update embeddings
 /datacortex opportunities        # Find low-hanging fruit for research
@@ -24,7 +25,8 @@ Launch the knowledge graph visualization or run graph analysis commands.
 
 | Command | Description |
 |---------|-------------|
-| `/datacortex` | Start server at localhost:8765 and open browser |
+| `/datacortex` | Start server at localhost:8765 and open graph |
+| `/datacortex workspace` | Open workspace UI (editor + Claude terminal) |
 | `/datacortex stats` | Show node/edge counts, types, spaces |
 | `/datacortex orphans [--min-words N]` | Find documents with no connections |
 | `/datacortex spaces` | List spaces with knowledge databases |
@@ -67,6 +69,30 @@ fi
 
 open http://localhost:8765
 ```
+
+### /datacortex workspace
+
+Open the workspace UI with file browser, markdown editor, and Claude Code terminal:
+
+```bash
+cd ~/Data/1-datafund/2-projects/datacortex
+source .venv/bin/activate
+
+if ! curl -s http://localhost:8765/api/health > /dev/null 2>&1; then
+    echo "Starting datacortex server..."
+    DATACORE_ROOT=~/Data datacortex serve &
+    sleep 2
+fi
+
+open http://localhost:8765/workspace.html
+```
+
+**Workspace features:**
+- **File tree**: Browse knowledge base with search (Ctrl+P)
+- **Markdown editor**: CodeMirror with Tokyo Night theme
+- **Claude terminal**: Interactive Claude Code session via PTY
+- **Links dropdown**: View wiki-links and backlinks for current file
+- **Known limitation**: Terminal has visual artifacts due to xterm.js/Claude TUI incompatibility
 
 ### /datacortex stats
 
